@@ -21,6 +21,12 @@
 			<button>login</button>
 			<p class="message">Forgot Password? <a href="#">Click Here</a></p>
 		</form>
+		<script>
+			function myFunction() {
+				document.getElementById("myForm").reset();
+			}
+		</script>
+
 		<%
 		String name = request.getParameter("uname");
 		String roll = request.getParameter("rno");
@@ -29,9 +35,12 @@
 			
 			%>
 			<%@ page import = "java.sql.*" %>
+			<%@ page import = "java.io.*" %>
+			<%@ page import = "java.util.*" %>
 		<%
 			try
 			{
+				int count=0;
 				Class.forName("com.mysql.jdbc.Driver");  
 				Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/mysql","root","papan2202");
 				Statement stmt = conn.createStatement();
@@ -40,9 +49,19 @@
 				sqlStr += "AND roll like '"+roll+"'";
 				System.out.println("Query statement is " + sqlStr);
 				ResultSet rset = stmt.executeQuery(sqlStr);
-				while(rset.next())  
-				out.println(rset.getString(1)+"  "+rset.getString(2)+"\n");  
-				if (rset==null) out.println ("Data not on server\n");
+				while(rset.next())
+				{
+					out.println(rset.getString(1)+"  "+rset.getString(2)+"\n");
+					count++;
+				}
+				if (count==0) {
+					out.println("Oops! Check you credentials and try again!");
+				}
+				else {
+					String site="nomination.html";
+					response.setStatus(response.SC_MOVED_TEMPORARILY);
+					response.setHeader("Location", site); 
+				}
 				conn.close();
 			}
 			catch (Exception e)
