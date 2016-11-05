@@ -1,2 +1,1 @@
-#E-governance System
-We'll be live soon
+# E-Governance System for Jadavpur University
